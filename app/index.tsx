@@ -1,3 +1,4 @@
+import StartScreen from '@/screens/start/screen';
 import { FontdinerSwanky_400Regular } from '@expo-google-fonts/fontdiner-swanky';
 import {
   Oxanium_200ExtraLight,
@@ -44,6 +45,7 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
+      <StartScreen />
     </View>
   );
 }
