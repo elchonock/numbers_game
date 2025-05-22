@@ -1,0 +1,9 @@
+# Ignore artifacts:
+build
+coverage
+
+/.all-contributorsrc
+/.husky
+/coverage
+/lib
+/pnpm-lock.yaml
