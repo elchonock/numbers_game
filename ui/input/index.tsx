@@ -2,12 +2,7 @@ import { FONT_FAMILY } from '@/ui/text';
 import { THEME_COLORS } from '@/ui/theme';
 import { StyleSheet, TextInput, TextInputProps, View } from 'react-native';
 
-export interface MyNumericInputProps extends TextInputProps {
-  color?: string;
-  size?: string;
-}
-
-function NumericInput({ style = {}, ...props }: MyNumericInputProps) {
+function NumericInput({ style = {}, ...props }: TextInputProps) {
   return (
     <View style={styles.container}>
       <TextInput
