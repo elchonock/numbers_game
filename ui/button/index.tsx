@@ -1,8 +1,9 @@
 import MyText, { MyTextProps, TEXT_COLORS, TextColors } from '@/ui/text';
 import { THEME_COLORS } from '@/ui/theme';
+import { Entypo } from '@expo/vector-icons';
 import { Pressable, PressableProps, StyleSheet, View } from 'react-native';
 
-const BUTTON_COLORS = {
+export const BUTTON_COLORS = {
   black: THEME_COLORS.ALL.black,
   white: THEME_COLORS.ALL.white,
   blue: THEME_COLORS.ALL.blue,
@@ -13,7 +14,7 @@ const BUTTON_COLORS = {
 
 type ButtonColors = keyof typeof BUTTON_COLORS;
 
-const TITLE_COLORS = {
+export const TITLE_COLORS = {
   white: TEXT_COLORS.white,
   black: TEXT_COLORS.black,
   orange: TEXT_COLORS.orange,
@@ -38,10 +39,12 @@ interface MyButtonProps extends PressableProps {
   title: string;
   color?: ButtonColors;
   titleProps?: MyTextProps;
+  iconName?: keyof typeof Entypo.glyphMap;
 }
 
 function MyButton({
   title = '',
+  iconName,
   color = 'orange',
   disabled,
   children,
@@ -73,7 +76,8 @@ function MyButton({
         />
 
         <View style={[styles.container, { backgroundColor, opacity: disabled ? 0.6 : 1 }]}>
-          {/* <Image style={{ width: 20, height: 20 }} source={require('@/assets/images/favicon.png')} /> */}
+          {!!iconName && <Entypo name={iconName} size={20} color={TEXT_COLORS[titleColor]} />}
+
           <MyText color={titleColor} size="lg" weight="600" {...titleProps}>
             {title}
           </MyText>
@@ -88,9 +92,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 10,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    gap: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 9,
     minWidth: 64,
     borderRadius: 16,
     boxShadow: 'rgba(0, 0, 0, 0.18) 0px 1px 4px',
