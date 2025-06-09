@@ -1,4 +1,7 @@
+import GameOverScreen from '@/screens/game-over/screen';
+import GameScreen from '@/screens/game/screen';
 import StartScreen from '@/screens/start/screen';
+import { THEME_COLORS } from '@/ui/theme';
 import { FontdinerSwanky_400Regular } from '@expo-google-fonts/fontdiner-swanky';
 import {
   Oxanium_200ExtraLight,
@@ -13,7 +16,7 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 SplashScreen.preventAutoHideAsync();
@@ -30,11 +33,36 @@ const OXANIUM = {
 
 export type OxaniumFontVariants = keyof typeof OXANIUM;
 
+type GameProgress = 'notStarted' | 'inProgress' | 'finished';
+type Screens = 'start' | 'game' | 'gameOver';
+
+type GameState = {
+  progress: GameProgress;
+  screen: Screens;
+  attempts: number;
+  guesses: number[];
+};
+
+const initialGameState: GameState = { progress: 'notStarted', screen: 'start', attempts: 0, guesses: [] };
+
 export default function Index() {
   const [fontsLoaded, fontsError] = useFonts({
     FontdinerSwanky_400Regular,
     ...OXANIUM,
   });
+
+  const [gameState, setGameState] = useState<GameState>(initialGameState);
+  const [theNumber, setTheNumber] = useState<number | null>(null);
+
+  const isNumberValid = (number: number | string | null) => {
+    return !!(typeof number === 'number' && !isNaN(+number) && +number > 0 && +number < 100);
+  };
+
+  useEffect(() => {
+    if (isNumberValid(theNumber)) {
+      setGameState((prev) => ({ ...prev, progress: 'inProgress', screen: 'game' }));
+    }
+  }, [theNumber]);
 
   useEffect(() => {
     if (fontsLoaded || fontsError) {
@@ -45,7 +73,10 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <StartScreen />
+
+      {gameState.screen === 'start' && <StartScreen setNumber={setTheNumber} />}
+      {gameState.screen === 'game' && <GameScreen />}
+      {gameState.screen === 'gameOver' && <GameOverScreen />}
     </View>
   );
 }
@@ -55,6 +86,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#08d8ca',
+    backgroundColor: THEME_COLORS.ALL.purple,
   },
 });
