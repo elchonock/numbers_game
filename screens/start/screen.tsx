@@ -1,65 +1,93 @@
 import MyButton from '@/ui/button';
-import { StyleSheet, TextInput, View } from 'react-native';
+import NumericInput from '@/ui/input';
+import MyText from '@/ui/text';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { StyleSheet, View } from 'react-native';
+import { z } from 'zod';
 
-const StartScreen = () => {
-	const handleReset = () => {
-		console.log('reset');
-	};
-	const handleConfirm = () => {
-		console.log('confirm');
-	};
+const NumberValidatorSchema = z.object({
+  number: z.string().pipe(z.coerce.number({ message: 'Should be a number between 1 and 99' }).min(1).max(99)),
+});
 
-	return (
-		<View style={styles.container}>
-			<TextInput
-				style={{
-					color: '#3e3940',
-					fontSize: 24,
-					fontWeight: 500,
-					borderWidth: 1,
-					borderColor: '#c64d9f',
-					borderRadius: 16,
-					padding: 12,
-					width: '100%',
-					backgroundColor: '#ececf4',
-				}}
-				placeholder="New input"
-				maxLength={2}
-				keyboardType="number-pad"
-				// autoCapitalize='none'
-				// autoCorrect={false}
-			/>
-			<View style={styles.buttonsContainer}>
-				<MyButton style={styles.button} onPress={handleConfirm} title="Confirm" />
-				<MyButton style={styles.button} color="white" onPress={handleReset} title="Reset" />
-			</View>
-		</View>
-	);
+type FormValues = z.infer<typeof NumberValidatorSchema>;
+
+interface StartScreenProps {
+  setNumber: (number: number | null) => void;
+}
+
+const StartScreen = ({ setNumber }: StartScreenProps) => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+    reset,
+  } = useForm({ resolver: zodResolver(NumberValidatorSchema), mode: 'onChange' });
+
+  const handleReset = () => {
+    reset();
+    setNumber(null);
+  };
+
+  const handleConfirm: SubmitHandler<FormValues> = ({ number }) => {
+    setNumber(number ?? null);
+  };
+
+  return (
+    <View style={styles.container}>
+      <MyText color="white" size="lg">
+        Enter a number between 1 and 99
+      </MyText>
+
+      <Controller
+        control={control}
+        name="number"
+        render={({ field: { onBlur, onChange, value } }) => (
+          <NumericInput
+            value={value}
+            onBlur={onBlur}
+            onChangeText={(val) => {
+              if (!isNaN(+val)) {
+                onChange(val);
+              }
+            }}
+          />
+        )}
+      />
+
+      {errors && <MyText color="red">{errors.number?.message}</MyText>}
+
+      <View style={styles.buttonsContainer}>
+        <MyButton
+          style={styles.button}
+          onPress={handleSubmit(handleConfirm)}
+          title="Confirm"
+          iconName="check"
+          disabled={!isValid}
+        />
+        <MyButton style={styles.button} color="white" onPress={handleReset} title="Reset" iconName="cross" />
+      </View>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: 'flex-start',
-		alignItems: 'center',
-		gap: 12,
-		width: '100%',
-		padding: 16,
-		backgroundColor: '#34325c',
-		elevation: 3, // for android only
-		shadowColor: '#00ceab', // for iOS only
-		shadowOffset: { width: 0, height: 4 }, // for iOS only
-		shadowOpacity: 0.7, // for iOS only
-		shadowRadius: 8, // for iOS only
-	},
-	buttonsContainer: {
-		flex: 1,
-		flexDirection: 'row',
-		gap: 12,
-	},
-	button: {
-		flex: 1,
-	},
+  container: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    gap: 16,
+    width: '100%',
+    padding: 16,
+  },
+  buttonsContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    gap: 12,
+  },
+  button: {
+    flex: 1,
+  },
 });
 
 export default StartScreen;
