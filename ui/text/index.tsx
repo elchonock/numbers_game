@@ -28,7 +28,7 @@ type FontFamily = {
   [K in FontWeightValues]: OxaniumFontVariants;
 };
 
-const FONT_FAMILY: FontFamily = {
+export const FONT_FAMILY: FontFamily = {
   200: 'Oxanium_200',
   300: 'Oxanium_300',
   400: 'Oxanium_400',
