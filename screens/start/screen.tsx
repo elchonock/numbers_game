@@ -1,3 +1,5 @@
+import SubTitle from '@/components/subtitle';
+import Title from '@/components/title';
 import MyButton from '@/ui/button';
 import NumericInput from '@/ui/input';
 import MyText from '@/ui/text';
@@ -35,37 +37,40 @@ const StartScreen = ({ setNumber }: StartScreenProps) => {
 
   return (
     <View style={styles.container}>
-      <MyText color="white" size="lg">
-        Enter a number between 1 and 99
-      </MyText>
+      <Title color="red">START</Title>
 
-      <Controller
-        control={control}
-        name="number"
-        render={({ field: { onBlur, onChange, value } }) => (
-          <NumericInput
-            value={value}
-            onBlur={onBlur}
-            onChangeText={(val) => {
-              if (!isNaN(+val)) {
-                onChange(val);
-              }
-            }}
-          />
-        )}
-      />
+      <View style={styles.contentContainer}>
+        <SubTitle>Enter a number between 1 and 99 to start the Game</SubTitle>
 
-      {errors && <MyText color="red">{errors.number?.message}</MyText>}
-
-      <View style={styles.buttonsContainer}>
-        <MyButton
-          style={styles.button}
-          onPress={handleSubmit(handleConfirm)}
-          title="Confirm"
-          iconName="check"
-          disabled={!isValid}
+        <Controller
+          control={control}
+          name="number"
+          render={({ field: { onBlur, onChange, value } }) => (
+            <NumericInput
+              value={value}
+              onBlur={onBlur}
+              onChangeText={(val) => {
+                if (!isNaN(+val)) {
+                  onChange(val);
+                }
+              }}
+            />
+          )}
         />
-        <MyButton style={styles.button} color="white" onPress={handleReset} title="Reset" iconName="cross" />
+
+        {errors && <MyText color="red">{errors.number?.message}</MyText>}
+
+        <View style={styles.buttonsContainer}>
+          <MyButton
+            style={styles.button}
+            color="green"
+            onPress={handleSubmit(handleConfirm)}
+            title="Confirm"
+            iconName="check"
+            disabled={!isValid}
+          />
+          <MyButton style={styles.button} color="white" onPress={handleReset} title="Reset" iconName="cross" />
+        </View>
       </View>
     </View>
   );
@@ -80,10 +85,14 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 16,
   },
+  contentContainer: {
+    alignItems: 'center',
+    gap: 16,
+  },
   buttonsContainer: {
-    flex: 1,
     flexDirection: 'row',
     gap: 12,
+    width: '100%',
   },
   button: {
     flex: 1,
