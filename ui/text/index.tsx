@@ -6,7 +6,7 @@ export const TEXT_COLORS = THEME_COLORS.ALL;
 
 export type TextColors = keyof typeof TEXT_COLORS;
 
-const FONT_SIZES = {
+export const FONT_SIZES = {
   xs: 12,
   sm: 14,
   base: 16,
