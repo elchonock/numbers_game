@@ -1,5 +1,6 @@
 import SubTitle from '@/components/subtitle';
 import Title from '@/components/title';
+import { GAME_SETTINGS } from '@/data/constants';
 import MyButton from '@/ui/button';
 import NumericInput from '@/ui/input';
 import MyText from '@/ui/text';
@@ -9,7 +10,12 @@ import { StyleSheet, View } from 'react-native';
 import { z } from 'zod';
 
 const NumberValidatorSchema = z.object({
-  number: z.string().pipe(z.coerce.number({ message: 'Should be a number between 1 and 99' }).min(1).max(99)),
+  number: z.string().pipe(
+    z.coerce
+      .number({ message: `Should be a number between ${GAME_SETTINGS.MIN} and ${GAME_SETTINGS.MAX}` })
+      .min(GAME_SETTINGS.MIN)
+      .max(GAME_SETTINGS.MAX),
+  ),
 });
 
 type FormValues = z.infer<typeof NumberValidatorSchema>;
@@ -40,7 +46,9 @@ const StartScreen = ({ setNumber }: StartScreenProps) => {
       <Title color="red">START</Title>
 
       <View style={styles.contentContainer}>
-        <SubTitle>Enter a number between 1 and 99 to start the Game</SubTitle>
+        <SubTitle>
+          Enter a number between {GAME_SETTINGS.MIN} and {GAME_SETTINGS.MAX} to start the Game
+        </SubTitle>
 
         <Controller
           control={control}

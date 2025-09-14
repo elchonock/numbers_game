@@ -1,13 +1,16 @@
+import { GAME_SETTINGS } from '@/data/constants';
 import { FONT_FAMILY } from '@/ui/text';
 import { THEME_COLORS } from '@/ui/theme';
 import { StyleSheet, TextInput, TextInputProps, View } from 'react-native';
+
+const maxLength = GAME_SETTINGS.MAX.toString().length;
 
 function NumericInput({ style = {}, ...props }: TextInputProps) {
   return (
     <View style={styles.container}>
       <TextInput
         style={[styles.input, style]}
-        maxLength={2}
+        maxLength={maxLength}
         keyboardType="number-pad"
         autoCorrect={false}
         cursorColor={THEME_COLORS.ALL.purple}
@@ -19,7 +22,7 @@ function NumericInput({ style = {}, ...props }: TextInputProps) {
 
 const styles = StyleSheet.create({
   container: {
-    width: 100,
+    width: (100 * maxLength) / 2,
   },
   input: {
     textAlign: 'center',
