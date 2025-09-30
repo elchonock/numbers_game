@@ -14,13 +14,13 @@ export const BUTTON_COLORS = {
 
 type ButtonColors = keyof typeof BUTTON_COLORS;
 
-export const TITLE_COLORS = {
+export const BUTTON_TITLE_COLORS = {
   white: TEXT_COLORS.white,
   black: TEXT_COLORS.black,
   orange: TEXT_COLORS.orange,
 } as const;
 
-type TitleColors = keyof typeof TITLE_COLORS;
+type TitleColors = keyof typeof BUTTON_TITLE_COLORS;
 
 const mapTitleColors: { [K in ButtonColors]: TitleColors } = {
   black: 'orange',
@@ -36,7 +36,7 @@ const getTitleColor = (buttonColor: ButtonColors): TextColors => {
 };
 
 interface MyButtonProps extends PressableProps {
-  title: string;
+  title?: string;
   color?: ButtonColors;
   titleProps?: MyTextProps;
   iconName?: keyof typeof Entypo.glyphMap;
@@ -78,9 +78,11 @@ function MyButton({
         <View style={[styles.container, { backgroundColor, opacity: disabled ? 0.6 : 1 }]}>
           {!!iconName && <Entypo name={iconName} size={20} color={TEXT_COLORS[titleColor]} />}
 
-          <MyText color={titleColor} size="lg" weight="600" {...titleProps}>
-            {title}
-          </MyText>
+          {!!title && (
+            <MyText color={titleColor} size="lg" weight="600" {...titleProps}>
+              {title}
+            </MyText>
+          )}
         </View>
       </View>
     </Pressable>
@@ -90,9 +92,10 @@ function MyButton({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    gap: 6,
     paddingHorizontal: 12,
     paddingVertical: 9,
     minWidth: 64,
